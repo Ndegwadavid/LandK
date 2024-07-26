@@ -37,6 +37,20 @@
     </style>
 </head>
 <body>
+    <header class="header">
+        <nav class="nav">
+            <div>
+                <a href="{% url 'product_list' %}">Home</a>
+                <a href="{% url 'product_list' %}">Products</a>
+                <a href="#" id="wishlist-link">Wishlist (<span id="wishlist-count">0</span>)</a>
+            </div>
+            <form class="search-form" action="{% url 'product_list' %}" method="get">
+                <input type="text" name="search" placeholder="Search products...">
+                <button type="submit">Search</button>
+            </form>
+        </nav>
+    </header>
+    
     <h1>Our Products</h1>
     
     <div class="category-filter">
@@ -47,25 +61,42 @@
             </a>
         {% endfor %}
     </div>
+    {% if featured_products %}
+    <h2>Featured Products</h2>
+    <div class="product-grid">
+        {% for product in featured_products %}
+            {% include 'products/product_card.html' with product=product %}
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <div class="product-grid">
         {% for product in products %}
-            <div class="product-card">
-                <h2>{{ product.name }}</h2>
-                {% if product.get_thumbnail %}
-                    <img src="{{ product.get_thumbnail }}" alt="{{ product.name }}" class="product-image">
-                {% elif product.image %}
-                    <img src="{{ product.get_image }}" alt="{{ product.name }}" class="product-image">
-                {% else %}
-                    <p>No image available</p>
-                {% endif %}
-                <p>{{ product.description|truncatewords:20 }}</p>
-                <p>Price: ${{ product.price }}</p>
-                <a href="{{ product.get_absolute_url }}">View Details</a>
-            </div>
+            {% include 'products/product_card.html' with product=product %}
         {% empty %}
             <p>No products available in this category.</p>
         {% endfor %}
     </div>
+    <script>
+        // Simple wishlist functionality using localStorage
+        let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        
+        function updateWishlistCount() {
+            document.getElementById('wishlist-count').textContent = wishlist.length;
+        }
+
+        function toggleWishlist(productId) {
+            const index = wishlist.indexOf(productId);
+            if (index > -1) {
+                wishlist.splice(index, 1);
+            } else {
+                wishlist.push(productId);
+            }
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            updateWishlistCount();
+        }
+
+        updateWishlistCount();
+    </script>
 </body>
 </html>

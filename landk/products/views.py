@@ -26,17 +26,28 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):
 def product_list(request):
     categories = Category.objects.all()
     category_slug = request.GET.get('category')
+    search_query = request.GET.get('search')
+    
+    products = Product.objects.all()
     
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
-        products = Product.objects.filter(category=category)
-    else:
-        products = Product.objects.all()
+        products = products.filter(category=category)
+    
+    if search_query:
+        products = products.filter(
+            Q(name__icontains=search_query) | 
+            Q(description__icontains=search_query)
+        )
+    
+    featured_products = Product.objects.filter(featured=True)[:4]  # Assuming you add a 'featured' field to your Product model
     
     context = {
         'categories': categories,
         'products': products,
-        'current_category': category_slug
+        'current_category': category_slug,
+        'featured_products': featured_products,
+        'search_query': search_query,
     }
     return render(request, 'products/product_list.html', context)
 
