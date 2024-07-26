@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }}</title>
+    <style>
+        .product-image {
+            max-width: 500px;
+            height: auto;
+        }
+        .share-section {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ product.name }}</h1>
+    {% if product.image %}
+        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="product-image">
+    {% else %}
+        <p>No image available</p>
+    {% endif %}
+    <p>{{ product.description }}</p>
+    <p>Price: ${{ product.price }}</p>
+    <p>Category: {{ product.category.name }}</p>
+    
+    <div class="share-section">
+        <h3>Share this product</h3>
+        <p>Copy this link to share:</p>
+        <input type="text" value="{{ request.scheme }}://{{ request.get_host }}{{ product.get_share_url }}" readonly onclick="this.select();" style="width: 100%;">
+        
+        <!-- Optional: Add social media sharing buttons -->
+        <p>Share on social media:</p>
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.scheme }}://{{ request.get_host }}{{ product.get_share_url|urlencode }}" target="_blank">Share on Facebook</a>
+        <a href="https://twitter.com/intent/tweet?url={{ request.scheme }}://{{ request.get_host }}{{ product.get_share_url|urlencode }}&text=Check out this product: {{ product.name }}" target="_blank">Share on Twitter</a>
+    </div>
+
+    <a href="{% url 'product_list' %}">Back to Product List</a>
+</body>
+</html>
