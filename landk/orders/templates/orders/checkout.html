@@ -1,0 +1,27 @@
+{% block content %}
+<h1>Checkout</h1>
+
+<form method="post" action="{% url 'place_order' %}">
+    {% csrf_token %}
+    
+    <h2>Shipping Information</h2>
+    {{ form.as_p }}
+    
+    <h2>Order Summary</h2>
+    <ul>
+    {% for item in cart_items %}
+        <li>{{ item.product.name }} - Quantity: {{ item.quantity }} - Price: ${{ item.total_price }}</li>
+    {% endfor %}
+    </ul>
+    <p>Total: ${{ total_price }}</p>
+    
+    <h2>Payment Method</h2>
+    <select name="payment_method">
+        <option value="credit_card">Credit Card</option>
+        <option value="paypal">PayPal</option>
+    </select>
+    
+    <button type="submit">Place Order</button>
+</form>
+
+{% endblock %}

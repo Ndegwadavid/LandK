@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            animation: fadeIn 1s;
+        }
+        .order-details {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .item-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .item-list li {
+            background-color: #fff;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-message">
+            <h2>🎉 Order Placed Successfully!</h2>
+            <p>Thank you for your purchase, {{ order.user.username }}!</p>
+        </div>
+
+        <h1>Order Confirmation</h1>
+        
+        <div class="order-details">
+            <p><strong>Order ID:</strong> #{{ order.id }}</p>
+            <p><strong>Order Date:</strong> {{ order.created_at|date:"F d, Y H:i" }}</p>
+            <p><strong>Total:</strong> ${{ order.total_price }}</p>
+            <p><strong>Status:</strong> {{ order.get_status_display }}</p>
+        </div>
+
+        <h2>Items Ordered:</h2>
+        <ul class="item-list">
+        {% for item in order.items.all %}
+            <li>
+                <strong>{{ item.product.name }}</strong><br>
+                Quantity: {{ item.quantity }} | Price: ${{ item.price }}
+            </li>
+        {% endfor %}
+        </ul>
+
+        <h2>Shipping Address:</h2>
+        <p>
+            {{ order.shipping_address.address }}<br>
+            {{ order.shipping_address.city }}, {{ order.shipping_address.state }} {{ order.shipping_address.zip_code }}
+        </p>
+
+        <div style="margin-top: 30px;">
+            <p>We've sent a confirmation email to {{ order.user.email }}. If you have any questions about your order, please contact our customer support.</p>
+            <p>Thank you for shopping with us!</p>
+        </div>
+    </div>
+
+    <script>
+        // Add a simple animation to highlight the order total
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const totalElement = document.querySelector('.order-details p:nth-child(3)');
+            totalElement.style.transition = 'all 0.5s';
+            setTimeout(() => {
+                totalElement.style.fontSize = '1.2em';
+                totalElement.style.color = '#28a745';
+            }, 500);
+        });
+    </script>
+</body>
+</html>

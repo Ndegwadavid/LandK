@@ -26,6 +26,9 @@
     <p>{{ product.description }}</p>
     <p>Price: ${{ product.price }}</p>
     <p>Category: {{ product.category.name }}</p>
+    <button onclick="addToCart({{ product.id }})">Add to Cart</button>
+    <a href="{% url 'checkout' product.id %}" class="buy-button">Buy Now</a>
+
     
     <div class="share-section">
         <h3>Share this product</h3>

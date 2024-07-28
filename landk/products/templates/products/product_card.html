@@ -1,14 +1,12 @@
+{% load static %}
 <div class="product-card">
-    <h2>{{ product.name }}</h2>
-    {% if product.get_thumbnail %}
-        <img src="{{ product.get_thumbnail }}" alt="{{ product.name }}" class="product-image">
-    {% elif product.image %}
-        <img src="{{ product.get_image }}" alt="{{ product.name }}" class="product-image">
-    {% else %}
-        <p>No image available</p>
-    {% endif %}
-    <p>{{ product.description|truncatewords:20 }}</p>
+    <img src="{{ product.get_thumbnail }}" alt="{{ product.name }}" class="product-image">
+    <h3>{{ product.name }}</h3>
     <p>Price: ${{ product.price }}</p>
     <a href="{{ product.get_absolute_url }}">View Details</a>
-    <button onclick="toggleWishlist({{ product.id }})">Add to Wishlist</button>
+    <button onclick="addToCart({{ product.id }})">Add to Cart</button>
+    <a href="{% url 'checkout' product.id %}" class="buy-button">Buy Now</a>
+    <button onclick="toggleWishlist({{ product.id }})" class="wishlist-button">
+        Add to Wishlist
+    </button>
 </div>

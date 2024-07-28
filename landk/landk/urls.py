@@ -24,8 +24,11 @@ from products.views import product_list, product_detail, product_share
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    #path('', include('products.urls')),
     path('api/', include('products.urls')),
     path('products/', product_list, name='product_list'),
     path('share/<str:share_id>/', product_share, name='product_share'),
     path('<slug:category_slug>/<slug:product_slug>/', product_detail, name='product_detail'),
+    path('orders/', include('orders.urls')),  # Add this line
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
